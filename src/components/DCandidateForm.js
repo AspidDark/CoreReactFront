@@ -1,6 +1,8 @@
 import React, { useState } from 'react';   
 import {Grid, TextField, withStyles, FormControl, InputLabel, Select, MenuItem, Button, FormHelperText} from "@material-ui/core";
 import useForm from "./useForm";
+import {connect} from "react-redux";
+import * as actions from "../actions/dcandidate"
 
 
 const styles=theme=>({
@@ -30,17 +32,34 @@ const initialFieldValues={
 };
 
 const DCandidateForm = ({classes,...props}) => {
-
-    const validate=()=>{
+    //validate() Check all form
+    const validate=(fieldValues=values)=>{
         let temp={};
-        temp.fullName=values.fullName?"":"This field is required.";
-        temp.mobile=values.mobile?"":"This field is required.";
-        temp.bloodGroup=values.bloodGroup?"":"This field is required.";
-        temp.email=(/^$|.+@.+..+/).test(values.email)?"":"Email is not valid"; //regex emali validation
+        if('fullName'in fieldValues)
+        {
+            temp.fullName=fieldValues.fullName?"":"This field is required.";
+        }
+        if('mobile'in fieldValues)
+        {
+             temp.mobile=fieldValues.mobile?"":"This field is required.";
+        }
+        if('bloodGroup'in fieldValues)
+        {
+             temp.bloodGroup=fieldValues.bloodGroup?"":"This field is required.";
+        }
+        if('email'in fieldValues)
+        {
+             temp.email=(/^$|.+@.+..+/).test(fieldValues.email)?"":"Email is not valid"; //regex emali validation
+        }
         setErrors({
             ...temp
         });
-        return Object.values(temp).every(x=>x=="");
+        if(fieldValues==values)
+        {
+               return Object.values(temp).every(x=>x=="");
+        }
+
+
     };
 
     const {
@@ -49,7 +68,7 @@ const DCandidateForm = ({classes,...props}) => {
         errors,
         setErrors,
         handleInputChange
-    }=useForm(initialFieldValues);
+    }=useForm(initialFieldValues, validate);
 
     //Material Ui Select dropdown
     const inputLabel=React.useRef(null);
@@ -63,7 +82,9 @@ const DCandidateForm = ({classes,...props}) => {
         e.preventDefault();
         if(validate())
         {
-            window.alert('validation succeded')
+            props.createDcandidate(values,()=>{
+                window.alert("inserted");
+            });
         }
     };
 
@@ -149,5 +170,15 @@ const DCandidateForm = ({classes,...props}) => {
         </Grid>
     </form> );
 }
- 
-export default withStyles(styles)(DCandidateForm);
+
+const mapStateToProps = state=>({
+    dCandidateList:state.dcandidatereducer.list
+});
+
+const mapActionToProps ={
+    createDcandidate: actions.create,
+    updateDcandidate: actions.update
+};
+
+
+export default connect(mapStateToProps, mapActionToProps)(withStyles(styles)(DCandidateForm));

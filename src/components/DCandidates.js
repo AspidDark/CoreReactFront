@@ -22,7 +22,7 @@ const DCandidates = ({classes,...props}) => {
 
     useEffect(()=>{
         props.fetchallDCandidates()
-    }, []);//Component DidMount  min 57
+    }, []);//Component DidMount
     return (
     <Paper className={classes.paper} elevation={3}>
         <Grid container>
