@@ -6,20 +6,7 @@ import DCandidateForm from "./DCandidateForm";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useToasts } from "react-toast-notifications";
-
-
-
-const styles = theme => ({
-    root: {
-        "& .MuiTableCell-head": {
-            fontSize: "1.25rem"
-        }
-    },
-    paper: {
-        margin: theme.spacing(2),
-        padding: theme.spacing(2)
-    }
-})
+import {styles} from "./DCandidatesStyle";
 
 const DCandidates = ({ classes, ...props }) => {
     const [currentId, setCurrentId] = useState(0)

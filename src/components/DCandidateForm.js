@@ -4,22 +4,8 @@ import useForm from "./useForm";
 import { connect } from "react-redux";
 import * as actions from "../actions/dCandidate";
 import { useToasts } from "react-toast-notifications";
-
-const styles = theme => ({
-    root: {
-        '& .MuiTextField-root': {
-            margin: theme.spacing(1),
-            minWidth: 230,
-        }
-    },
-    formControl: {
-        margin: theme.spacing(1),
-        minWidth: 230,
-    },
-    smMargin: {
-        margin: theme.spacing(1)
-    }
-})
+import {MESSAGES} from "./consts";
+import {styles} from "./dCandidateFormStyle";
 
 const initialFieldValues = {
     fullName: '',
@@ -36,17 +22,16 @@ const DCandidateForm = ({ classes, ...props }) => {
     const { addToast } = useToasts()
 
     //validate()
-    //validate({fullName:'jenny'})
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
         if ('fullName' in fieldValues)
-            temp.fullName = fieldValues.fullName ? "" : "This field is required."
+            temp.fullName = fieldValues.fullName ? "" : MESSAGES.FIELDREQUIRED;
         if ('mobile' in fieldValues)
-            temp.mobile = fieldValues.mobile ? "" : "This field is required."
+            temp.mobile = fieldValues.mobile ? "" : MESSAGES.FIELDREQUIRED;
         if ('bloodGroup' in fieldValues)
-            temp.bloodGroup = fieldValues.bloodGroup ? "" : "This field is required."
+            temp.bloodGroup = fieldValues.bloodGroup ? "" : MESSAGES.FIELDREQUIRED;
         if ('email' in fieldValues)
-            temp.email = (/^$|.+@.+..+/).test(fieldValues.email) ? "" : "Email is not valid."
+            temp.email = (/^$|.+@.+..+/).test(fieldValues.email) ? "" : MESSAGES.INVALIDMAIL;
         setErrors({
             ...temp
         })

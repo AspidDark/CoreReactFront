@@ -29,7 +29,7 @@ const useForm = (initialFieldValues, validate, setCurrentId) => {
         setErrors,
         handleInputChange,
         resetForm
-    };
+    }; 
 }
 
 export default useForm;
