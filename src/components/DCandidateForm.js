@@ -1,8 +1,9 @@
-import React, { useState } from 'react';   
+import React, { useState, useEffect} from 'react';   
 import {Grid, TextField, withStyles, FormControl, InputLabel, Select, MenuItem, Button, FormHelperText} from "@material-ui/core";
 import useForm from "./useForm";
 import {connect} from "react-redux";
 import * as actions from "../actions/dcandidate"
+import {useToasts} from "react-toast-notifications";
 
 
 const styles=theme=>({
@@ -32,9 +33,11 @@ const initialFieldValues={
 };
 
 const DCandidateForm = ({classes,...props}) => {
+    //toast msg
+    const {addToast}=useToasts();
     //validate() Check all form
     const validate=(fieldValues=values)=>{
-        let temp={};
+        let temp={...errors};
         if('fullName'in fieldValues)
         {
             temp.fullName=fieldValues.fullName?"":"This field is required.";
@@ -58,8 +61,6 @@ const DCandidateForm = ({classes,...props}) => {
         {
                return Object.values(temp).every(x=>x=="");
         }
-
-
     };
 
     const {
@@ -67,8 +68,9 @@ const DCandidateForm = ({classes,...props}) => {
         setValues, 
         errors,
         setErrors,
-        handleInputChange
-    }=useForm(initialFieldValues, validate);
+        handleInputChange,
+        resetForm
+    }=useForm(initialFieldValues, validate, props.setCurrentId);
 
     //Material Ui Select dropdown
     const inputLabel=React.useRef(null);
@@ -80,13 +82,31 @@ const DCandidateForm = ({classes,...props}) => {
     const handleSubmit = e=>
     {
         e.preventDefault();
-        if(validate())
-        {
-            props.createDcandidate(values,()=>{
-                window.alert("inserted");
-            });
+        if(validate()){
+            const onSuccess=()=>{
+                resetForm();
+                addToast("Submit success", {appearance:'success'});
+            }
+            if(props.currentId==0){
+                props.createDcandidate(values, onSuccess);
+            }
+            else
+            {
+                props.updateDcandidate(props.currentId, values, onSuccess);
+            }
         }
+        
     };
+
+    useEffect(()=>{
+        if(props.currentId!=0)
+        {
+            setValues({
+                    ...props.dCandidateList.find(x=>x.id==props.currentId)
+            });
+            setErrors({});
+        }
+    },[props.currentId]);
 
 
     return ( <form autoComplete="off" noValidate className={classes.root} onSubmit={handleSubmit}>
@@ -164,6 +184,7 @@ const DCandidateForm = ({classes,...props}) => {
                        <Button
                     variant="contained"
                     className={classes.smMargin}
+                    onClick={resetForm}
                     >Reset</Button>
                 </div>
             </Grid>
