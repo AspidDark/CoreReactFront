@@ -1,5 +1,6 @@
-import {combineReducers} from 'redux';
-import {dcandidatereducer} from './dcandidatereducer';
+import { combineReducers } from "redux";
+import { dCandidate } from "./dCandidate";
 
-export const reducers = 
-combineReducers({dcandidatereducer });
+export const reducers = combineReducers({
+    dCandidate
+})

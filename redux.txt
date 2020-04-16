@@ -1,0 +1,5 @@
+redux react-redux redux-thunk
+axios
+npm i -s @material-ui/core @material-ui/icons
+npm i -s react-toast-notification //add provider in app component
+component->dispatch(action)-> reducer->component
